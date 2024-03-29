@@ -17,6 +17,10 @@ from nltk.stem import PorterStemmer
 import pickle
 from collections import Counter
 
+try:
+    nltk.data.find('corpora/stopwords.zip')
+except LookupError:
+    nltk.download('stopwords')
 
 stemmer = PorterStemmer()
 
