@@ -9,13 +9,9 @@ import pickle
 import nltk
 import string
 import regex as re
-from nltk.corpus import stopwords
 import streamlit as st
 from pyresparser import ResumeParser
-from nltk.tokenize import word_tokenize
-from nltk.stem import PorterStemmer 
 import pickle
-from io import StringIO
 
 from collections import Counter
 from utils import (preprocess, extract_experience, detect_languages, color_skills, skill_excluded,

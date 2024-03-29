@@ -9,11 +9,7 @@ import pickle
 import nltk
 import string
 import regex as re
-from nltk.corpus import stopwords
-import streamlit as st
-from pyresparser import ResumeParser
-from nltk.tokenize import word_tokenize
-from nltk.stem import PorterStemmer 
+import streamlit as st 
 import pickle
 from collections import Counter
 from docx import Document
@@ -34,17 +30,9 @@ def preprocess(text):
     cleaned_text = re.sub(r'(\\x[0-9a-fA-F]{2}|\\xc7\\x81|\\xe2\\x80\\x99)', '', cleaned_text)
     cleaned_text = re.sub(r'[\uf0b7/]', ' ', cleaned_text)
     cleaned_text = cleaned_text.translate(str.maketrans('', '', string.punctuation))
-    
-    # Process the text using spaCy
     doc = nlp(cleaned_text)
-    
-    # Remove stop words and lemmatize the remaining tokens
     filtered_tokens = [token.lemma_ for token in doc if not token.is_stop]
-    
-    # Join the tokens back into a string
     filtered_text = ' '.join(filtered_tokens)
-    
-    # Convert to lowercase
     filtered_text = filtered_text.lower()
 
     return filtered_text
