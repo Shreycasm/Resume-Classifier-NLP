@@ -13,7 +13,8 @@ import pickle
 from collections import Counter
 from docx import Document
 import spacy
-
+import nltk
+nltk.download('stopwords')
 
 
 nlp = spacy.load("en_core_web_sm")
