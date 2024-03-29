@@ -15,9 +15,11 @@ from pyresparser import ResumeParser
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer 
 import pickle
+from io import StringIO
+
 from collections import Counter
 from utils import (preprocess, extract_experience, detect_languages, color_skills, skill_excluded,
-                   extract_education_from_resume, standardize_qualification, read_docx, save_uploaded_file)
+                   extract_education_from_resume, standardize_qualification, read_docx)
 
 
 
@@ -47,8 +49,7 @@ def main():
                 content = []
                 skills = []
 
-                file_path = save_uploaded_file(uploaded_file)
-                content.append(read_docx(file_path))
+                content.append(read_docx(uploaded_file))
                 data = ResumeParser(uploaded_file).get_extracted_data()
                 skills.append(data["skills"])
 

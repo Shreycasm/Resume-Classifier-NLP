@@ -16,13 +16,14 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer 
 import pickle
 from collections import Counter
+from docx import Document
+import spacy
 
 
-nltk.download('stopwords')
 
-stemmer = PorterStemmer()
+nlp = spacy.load("en_core_web_sm")
 
-# preprocessing function
+# Define your preprocessing function
 def preprocess(text):
     if text.startswith("b'"):
         text = text[2:]
@@ -33,15 +34,21 @@ def preprocess(text):
     cleaned_text = re.sub(r'(\\x[0-9a-fA-F]{2}|\\xc7\\x81|\\xe2\\x80\\x99)', '', cleaned_text)
     cleaned_text = re.sub(r'[\uf0b7/]', ' ', cleaned_text)
     cleaned_text = cleaned_text.translate(str.maketrans('', '', string.punctuation))
-    tokens = word_tokenize(cleaned_text)
-    stop_words = set(stopwords.words('english'))
-    filtered_tokens = [word for word in tokens if word not in stop_words]
-    stemmed_tokens = [stemmer.stem(token) for token in filtered_tokens]
-    stemmed_text = ' '.join(stemmed_tokens)
-    stemmed_text = stemmed_text.lower()
-
     
-    return stemmed_text
+    # Process the text using spaCy
+    doc = nlp(cleaned_text)
+    
+    # Remove stop words and lemmatize the remaining tokens
+    filtered_tokens = [token.lemma_ for token in doc if not token.is_stop]
+    
+    # Join the tokens back into a string
+    filtered_text = ' '.join(filtered_tokens)
+    
+    # Convert to lowercase
+    filtered_text = filtered_text.lower()
+
+    return filtered_text
+
 
 
 # FUNCTION TO EXTRACT EXPERIENCE
@@ -131,15 +138,15 @@ def standardize_qualification(qualification):
         return "Not Mentioned"
 
 def read_docx(file_path):
-    text = textract.process(file_path)
-    return text.decode('utf-8')
+    doc = Document(file_path)
+
+    content = ""
+
+        # Iterate through paragraphs in the document and concatenate text
+    for paragraph in doc.paragraphs:
+        content += paragraph.text + "\n"
+
+    return content
 
 
-def save_uploaded_file(uploaded_file):
-    if not os.path.exists("temp"):
-        os.makedirs("temp")
-    
-    with open(os.path.join("temp", uploaded_file.name), "wb") as f:
-        f.write(uploaded_file.getbuffer())
-    
-    return os.path.join("temp", uploaded_file.name)
+
