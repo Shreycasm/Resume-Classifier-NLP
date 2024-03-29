@@ -6,7 +6,6 @@ import os
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 import pickle
-import nltk
 import string
 import regex as re
 import streamlit as st
