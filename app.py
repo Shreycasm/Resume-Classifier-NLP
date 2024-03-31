@@ -13,6 +13,7 @@ import streamlit as st
 import pickle
 import nltk
 nltk.download('stopwords')
+nltk.download('punkt')
 from collections import Counter
 from utils import (preprocess, extract_experience, detect_languages, color_skills, skill_excluded,
                    extract_education_from_resume, standardize_qualification, read_docx, extract_skills_from_resume)
