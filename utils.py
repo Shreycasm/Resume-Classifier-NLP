@@ -19,7 +19,6 @@ nltk.download('stopwords')
 
 nlp = spacy.load("en_core_web_sm")
 
-# Define your preprocessing function
 def preprocess(text):
     if text.startswith("b'"):
         text = text[2:]
@@ -37,9 +36,6 @@ def preprocess(text):
 
     return filtered_text
 
-
-
-# FUNCTION TO EXTRACT EXPERIENCE
 def extract_experience(text):
     pattern = r'(\d+(\.\d+)?)\+?(?:\s*years?|yrs?|Fresher)'
     match = re.search(pattern, text, re.IGNORECASE)
@@ -47,10 +43,7 @@ def extract_experience(text):
         return f'{match.group(1)} Years'
     else:
         return "Not found"
-    
 
-
-# FUNCTION TO EXTRACT LANGUAGE
 languages = ["english", "telugu", "kannada", "gujarati", "marathi", "hindi", "spanish", "french", 
              "malyalam", "japanese", "tamil", "bengali", "spanish", "sanskrit"]
 
@@ -65,8 +58,6 @@ def detect_languages(text):
 
     return detected_languages
 
-
-# FUNCTION TO COLOR SKILLS
 def color_skills(top, candidate_skills):
     parts = len(top) // 3
     first_part = top[:10]
@@ -96,7 +87,6 @@ def skill_excluded(top_20, candidate_skills):
     
     return not_mentioned
 
-# Extract Educations
 def extract_education_from_resume(text):
     education = []
     education_keywords = ['Bsc', 'B. Pharmacy', 'B Pharmacy', 'Msc', 'M. Pharmacy', 'Ph.D', 'Bachelor','Bachelors', 
@@ -112,7 +102,6 @@ def extract_education_from_resume(text):
 
     return education
 
-# Standardzing Education
 def standardize_qualification(qualification):
     quals_lower = [i.lower() for i in qualification]
     if any(i in ["msc", "masters", "master", "mca", "mtech", "m.e", "m.ca", "m.tech"] for i in quals_lower):
@@ -130,11 +119,8 @@ def read_docx(file_path):
 
     content = ""
 
-        # Iterate through paragraphs in the document and concatenate text
     for paragraph in doc.paragraphs:
         content += paragraph.text + "\n"
 
     return content
-
-
 

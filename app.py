@@ -20,7 +20,7 @@ from utils import (preprocess, extract_experience, detect_languages, color_skill
 
 
 
-st.set_page_config(page_title ="Resume Classifier")
+st.set_page_config(page_title="Resume Classifier")
 
 # LOADING MODEL
 with open("./artifacts/grid_search.pkl", "rb") as f:
@@ -32,8 +32,8 @@ train_df = pd.read_csv("./artifacts/final_df.csv")
 def main():
     st.markdown(f'<h1 style="text-align:center;">Resume Classifier</h1>', unsafe_allow_html=True)
 
-
-    uploaded_file = st.file_uploader("Upload a .docx file", type=["docx"])
+    uploaded_file = st.file_uploader("Upload your resume with a .docx extension", type=["docx"])
+    st.caption("Note: Currently the App only works for resumes of PeopleSoft, REactJS, SQL Developer, Workday")
     button = st.button("Get Details")
 
     if button:
@@ -114,21 +114,8 @@ def main():
     else:
         st.warning("Click the 'Get Details' button after uploading the file.")
 
-
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
