@@ -13,10 +13,9 @@ import streamlit as st
 import pickle
 import nltk
 nltk.download('stopwords')
-from pyresparser import ResumeParser
 from collections import Counter
 from utils import (preprocess, extract_experience, detect_languages, color_skills, skill_excluded,
-                   extract_education_from_resume, standardize_qualification, read_docx)
+                   extract_education_from_resume, standardize_qualification, read_docx, extract_skills_from_resume)
 
 
 
@@ -28,6 +27,7 @@ with open("./artifacts/grid_search.pkl", "rb") as f:
 
 # LOADING PREPROCESSED RANNING CSV
 train_df = pd.read_csv("./artifacts/final_df.csv")
+
 
 def main():
     st.markdown(f'<h1 style="text-align:center;">Resume Classifier</h1>', unsafe_allow_html=True)
@@ -46,24 +46,10 @@ def main():
                 content = []
                 skills = []
 
-                content.append(read_docx(uploaded_file))
-                data = ResumeParser(uploaded_file).get_extracted_data()
-                skills.append(data["skills"])
+                file_content = read_docx(uploaded_file)
+                content.append(file_content)
 
-                file_name = uploaded_file.name
-
-                if len(file_name.split("_")) != 1:
-                    if (file_name.split("_")[1].split('.')[0] == "Hexaware" or
-                            file_name.split("_")[1].split('.')[0] == "(Hexaware)"):
-                        name.append(file_name.split("_")[0])
-                    else:
-                        name.append(file_name.split("_")[1].split('.')[0])
-                else:
-                    name.append(file_name.split('.')[0])
-
-                df = pd.DataFrame(data={"content": content,
-                                         "name": name,
-                                         "skills": skills})
+                df = pd.DataFrame(data={"content": content})
 
                 df["clean"] = df["content"].apply(preprocess)
                 df["exp"] = df["content"].apply(extract_experience)
@@ -81,10 +67,29 @@ def main():
                 else:
                     label = "Workday"
 
+                file_name = uploaded_file.name
+                if len(file_name.split("_")) != 1:
+                    if (file_name.split("_")[1].split('.')[0] == "Hexaware" or
+                            file_name.split("_")[1].split('.')[0] == "(Hexaware)"):
+                        name.append(file_name.split("_")[0])
+                    else:
+                        name.append(file_name.split("_")[1].split('.')[0])
+                else:
+                    name.append(file_name.split('.')[0])
+
+                df["name"] = name
+
                 detected_langs = df['detected_languages'][0]
                 formatted_langs = ", ".join(lang.capitalize() for lang in detected_langs)
 
                 train_df["skills"] = train_df["skills"].apply(ast.literal_eval)
+                predicted_label_skills = train_df[train_df["label"] == prediction[0]]["skills"]
+                flattened_skills_list = [skill for sublist in predicted_label_skills for skill in sublist]
+                unique_skills_list = list(dict.fromkeys(flattened_skills_list))
+                skills.append(extract_skills_from_resume(file_content,unique_skills_list))
+                
+                df["skills"] = skills
+
                 all_skills = [skill for sublist in train_df[train_df["label"] == prediction[0]]["skills"] for skill
                               in sublist]
                 skill_counts = Counter(all_skills)

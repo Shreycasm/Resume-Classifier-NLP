@@ -1,5 +1,3 @@
-import textract
-import ast
 import numpy as np
 import pandas as pd
 import os
@@ -12,7 +10,7 @@ import streamlit as st
 import pickle
 from collections import Counter
 from docx import Document
-import nltk
+import nltk 
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 
@@ -55,6 +53,19 @@ def detect_languages(text):
         detected_languages.append("Not Mentioned")
 
     return detected_languages
+
+
+# Extract Skills From Resume
+def extract_skills_from_resume(resume_text, skills_list):
+    mentioned_skills = []
+    resume_text_lower = resume_text.lower()
+    
+    for skill in skills_list:
+        if skill.lower() in resume_text_lower:
+            mentioned_skills.append(skill)
+    
+    return mentioned_skills
+
 
 def color_skills(top, candidate_skills):
     parts = len(top) // 3
