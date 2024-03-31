@@ -12,13 +12,11 @@ import streamlit as st
 import pickle
 from collections import Counter
 from docx import Document
-import spacy
 import nltk
 nltk.download('stopwords')
+from nltk.corpus import stopwords
 
-
-spacy.cli.download("en_core_web_sm")
-nlp = spacy.load("en_core_web_sm")
+stop_words = set(stopwords.words('english'))
 
 def preprocess(text):
     if text.startswith("b'"):
@@ -30,10 +28,9 @@ def preprocess(text):
     cleaned_text = re.sub(r'(\\x[0-9a-fA-F]{2}|\\xc7\\x81|\\xe2\\x80\\x99)', '', cleaned_text)
     cleaned_text = re.sub(r'[\uf0b7/]', ' ', cleaned_text)
     cleaned_text = cleaned_text.translate(str.maketrans('', '', string.punctuation))
-    doc = nlp(cleaned_text)
-    filtered_tokens = [token.lemma_ for token in doc if not token.is_stop]
+    tokens = nltk.word_tokenize(cleaned_text)  # Tokenize the text
+    filtered_tokens = [token.lower() for token in tokens if token.lower() not in stop_words]
     filtered_text = ' '.join(filtered_tokens)
-    filtered_text = filtered_text.lower()
 
     return filtered_text
 
