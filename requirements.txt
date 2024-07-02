@@ -5,3 +5,4 @@ pyresparser
 regex
 nltk
 python-docx
+pickle

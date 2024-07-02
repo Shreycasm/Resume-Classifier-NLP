@@ -22,13 +22,15 @@ from utils import (preprocess, extract_experience, detect_languages, color_skill
 st.set_page_config(page_title="Resume Classifier")
 
 # LOADING MODEL
-with open("./artifacts/grid_search.pkl", "rb") as f:
-    model = pickle.load(f)
+
+model_path = "./artifacts/grid_search.pkl"
+
+model = pickle.load(open(model_path, "rb"))
 
 # LOADING PREPROCESSED RANNING CSV
 train_df = pd.read_csv("./artifacts/final_df.csv")
 
-
+# APP
 def main():
     st.markdown(f'<h1 style="text-align:center;">Resume Classifier</h1>', unsafe_allow_html=True)
 
@@ -94,12 +96,12 @@ def main():
                               in sublist]
                 skill_counts = Counter(all_skills)
                 top_skills = skill_counts.most_common()
-                top_20_skills = skill_counts.most_common(25)
+                top_25_skills = skill_counts.most_common(25)
                 all_skills = [skill[0] for skill in top_skills]
-                top_20_skills = [skill[0] for skill in top_20_skills]
+                top_25_skills = [skill[0] for skill in top_25_skills]
                 candidate_skills = df["skills"][0]
                 imp, mod, extra = color_skills(all_skills, candidate_skills)
-                not_mentioned = skill_excluded(top_20_skills, candidate_skills)
+                not_mentioned = skill_excluded(top_25_skills, candidate_skills)
 
                 st.subheader(f'*Name:* {df["name"][0]}')
                 st.write(f"*Experience:* {df['exp'][0]}")
