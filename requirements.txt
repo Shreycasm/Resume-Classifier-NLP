@@ -1,6 +1,7 @@
-pandas 
-scikit-learn==1.3.0
+pandas==2.2.2 
+scikit-learn
 pyresparser
 regex
 nltk
 python-docx
+numpy==1.26.4
