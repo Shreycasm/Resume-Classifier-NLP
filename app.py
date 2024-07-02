@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 from sklearn.feature_extraction.text import CountVectorizer
+from numpy.core.numeric import ComplexWarning
 from sklearn.naive_bayes import MultinomialNB
 import pickle
 import nltk

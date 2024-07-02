@@ -13,9 +13,11 @@ from docx import Document
 import nltk 
 nltk.download('stopwords')
 nltk.download('punkt')
+from numpy.core.numeric import ComplexWarning
 from nltk.corpus import stopwords
 
 stop_words = set(stopwords.words('english'))
+
 
 def preprocess(text):
     if text.startswith("b'"):

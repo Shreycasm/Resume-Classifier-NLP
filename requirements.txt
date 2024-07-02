@@ -4,3 +4,4 @@ pyresparser
 regex
 nltk
 python-docx
+python-version==3.9
